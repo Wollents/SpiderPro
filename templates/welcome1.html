@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="../static/css/font.css">
+        <link rel="stylesheet" href="../static/css/xadmin.css">
+        <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../static/js/xadmin.js"></script>
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+
+                <div class="layui-col-sm12 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">{{ city }} 最高/低工资展示
+                        <a  href="member-list.html?city">查看更多</a>
+                        </div>
+
+                        <div class="layui-card-body" style="min-height: 280px;">
+                            <div id="data" class="layui-col-sm12" style="height: 300px;"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm12 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">热门职业一览表</div>
+                        <div class="layui-card-body" style="min-height: 280px;">
+                            <div class="layui-col-sm12" style="height: 300px;">
+                            <img src="../static/images/HotJobsInfo.png" height="90%" width="100%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm12 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">后端岗位的学历要求
+                        <a  href="welcome.html">查看详情</a>
+                        </div>
+                        <div class="layui-card-body" style="min-height: 280px;">
+                            <div id="main3" class="layui-col-sm12" style="height: 300px;"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm12 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">后端岗位技术一览表</div>
+
+                        <div class="layui-card-body" style="min-height: 280px;">
+                            <img src="../static/images/TechWordPic.png" height="280px" width="100%">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    
+        <script src="../static/js/echarts.min.js"></script>
+        <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        const colors = ['#5470C6', '#EE6666'];
+            var myChart = echarts.init(document.getElementById('data'));
+            option = {
+              color: colors,
+              tooltip: {
+                trigger: 'none',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              legend: {},
+              grid: {
+                top: 70,
+                bottom: 50
+              },
+              xAxis: [
+                {
+                  type: 'category',
+                  axisTick: {
+                    alignWithLabel: true
+                  },
+                  axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                      color: colors[1]
+                    }
+                  },
+                  axisPointer: {
+                    label: {
+                      formatter: function (params) {
+                        return (
+                          'Precipitation  ' +
+                          params.value +
+                          (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                        );
+                      }
+                    }
+                  },
+                  // prettier-ignore
+                  data: []
+                },
+                {
+                  type: 'category',
+                  axisTick: {
+                    alignWithLabel: true
+                  },
+                  axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                      color: colors[0]
+                    }
+                  },
+                  axisPointer: {
+                    label: {
+                      formatter: function (params) {
+                        return (
+                          'Precipitation  ' +
+                          params.value +
+                          (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                        );
+                      }
+                    }
+                  },
+                  // prettier-ignore
+                  data:[]
+                }
+              ],
+              yAxis: [
+                {
+                  type: 'value'
+                }
+              ],
+              series: [
+                {
+                  name: '最低工资走势比较',
+                  type: 'line',
+                  xAxisIndex: 1,
+                  smooth: true,
+                  emphasis: {
+                    focus: 'series'
+                  },
+                  data: {{ msalary }}
+                },
+                {
+                  name: '最高工资走势比较',
+                  type: 'line',
+                  smooth: true,
+                  emphasis: {
+                    focus: 'series'
+                  },
+                  data: {{ Msalary }}
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main3'));
+
+        // 指定图表的配置项和数据
+        option = {
+              legend: {},
+              tooltip: {},
+              dataset: {
+                dimensions: ['地区','大专','学历不限', '本科', '硕士'],
+                source: {{ AreaInfo|tojson }}
+              },
+              xAxis: { type: 'category' },
+              yAxis: {},
+              // Declare several bar series, each will be mapped
+              // to a column of dataset.source by default.
+              series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' },{type:'line'}]
+            };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+         // 基于准备好的dom，初始化echarts实例
+
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+    </body>
+</html>
